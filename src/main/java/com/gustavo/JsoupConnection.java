@@ -14,7 +14,10 @@ public class JsoupConnection {
 //    deviantArt API get infos
     public static Document connectionDeviantArt(String url) {
         try {
-            return Jsoup.connect(url).get();
+            return Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) " +
+                    "AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+                    .get();
         } catch (IOException e) {
             log.error("Jsoup connection error.");
             e.printStackTrace();
@@ -22,3 +25,5 @@ public class JsoupConnection {
         }
     }
 }
+
+
