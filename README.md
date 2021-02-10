@@ -1,7 +1,7 @@
 # DeviantArt Images Jsoup
 
 ## Description
-Project developed to download all images from a gallery in [DeviantArt](deviantart.com) using Rest Template and 
+Project developed to download all images from a [DeviantArt](deviantart.com) gallery using Rest Template and 
 [JSOUP](https://jsoup.org).
 
 ## Technologies used

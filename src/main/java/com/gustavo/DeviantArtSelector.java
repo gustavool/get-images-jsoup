@@ -53,37 +53,47 @@ public class DeviantArtSelector {
                 hasMore = jsonObj.getBoolean("hasMore");
                 JSONArray jsonResults = jsonObj.getJSONArray("results");
 
-                //get urls from json diviantart
-                List<String> urlImgSelectList = new ArrayList<>();
-                for (int i = 0; i < jsonResults.length(); i++) {
-                    urlImgSelectList.add(jsonResults.getJSONObject(i).getJSONObject("deviation").getString("url"));
-                }
-                log.info("get url links from json, size: {}", urlImgSelectList.size());
-
-                //get specific url images with Jsoup
-                List<String> urlImgs = new ArrayList<>();
-                for (String urlImage : urlImgSelectList) {
-                    log.info("Delay of 2 seconds - get specific url");
-                    Thread.sleep(2000L);
-                    Document doc = JsoupConnection.connectionDeviantArt(urlImage);
-                    Elements imgElement = doc.select("._1izoQ");
-                    urlImgs.add(imgElement.attr("src"));
-                }
-                log.info("get specific url from website, total: {}", urlImgSelectList.size());
-
-                //save images .png
-                for (String urlImg : urlImgs) {
-                    log.info("Delay of 2 seconds - saving images");
-                    Thread.sleep(2000L);
-                    try (InputStream in = new URL(urlImg).openStream()) {
-                        Files.copy(in, Paths.get("C:/images/image" + nameNumber + ".png"));
-                        nameNumber++;
+                if (!jsonGetDeviantArt.isEmpty() && jsonResults != null) {
+                    //get urls from json diviantart
+                    List<String> urlImgSelectList = new ArrayList<>();
+                    for (int i = 0; i < jsonResults.length(); i++) {
+                        urlImgSelectList.add(jsonResults.getJSONObject(i).getJSONObject("deviation").getString("url"));
                     }
+                    log.info("Get url links from json, size: {}", urlImgSelectList.size());
+
+                    //get specific url images with Jsoup
+                    List<String> urlImgs = new ArrayList<>();
+                    for (String urlImage : urlImgSelectList) {
+                        log.info("Delay of 2 seconds - get specific url");
+                        Thread.sleep(2000L);
+                        Document doc = JsoupConnection.connectionDeviantArt(urlImage);
+                        if (doc != null) {
+                            Elements imgElement = doc.select("._1izoQ");
+                            if (imgElement != null) {
+                                urlImgs.add(imgElement.attr("src"));
+                            } else {
+                                log.warn("Image element not found.");
+                            }
+                        }
+                    }
+                    log.info("Get specific url from website, total: {}", urlImgSelectList.size());
+
+                    //save images .png
+                    for (String urlImg : urlImgs) {
+                        log.info("Delay of 2 seconds - saving images");
+                        Thread.sleep(2000L);
+                        try (InputStream in = new URL(urlImg).openStream()) {
+                            Files.copy(in, Paths.get("C:/images/image" + nameNumber + ".png"));
+                            nameNumber++;
+                        }
+                    }
+                    log.info("Total images: {}", nameNumber);
+                    offsetNum += 24;
+                    urlImgSelectList.clear();
+                    urlImgs.clear();
+                } else {
+                    log.warn("Link not found.");
                 }
-                log.info("Total images: {}", nameNumber);
-                offsetNum += 24;
-                urlImgSelectList.clear();
-                urlImgs.clear();
             }
         } catch (HttpStatusException e) {
             e.printStackTrace();
