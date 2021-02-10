@@ -17,19 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class Selector {
-    private Selector() {
+public class DeviantArtSelector {
+    private DeviantArtSelector() {
     }
 
     static final RestTemplate restTemplate = new RestTemplate();
 
     public static void getAllImages() throws IOException, InterruptedException {
         String username = "maxiuchiha22";
-        int offsetNum = 0;
         int folderId = 72762201;
 
+        int offsetNum = 0;
         int nameNumber = 0;
-
         boolean hasMore = true;
 
         try {
