@@ -1,7 +1,7 @@
 # DeviantArt Images Jsoup
 
 ## Description
-Project developed to download all images from a [DeviantArt](deviantart.com) gallery using Rest Template and 
+Simple project developed to download all images from a [DeviantArt](https://www.deviantart.com) gallery using Rest Template and 
 [JSOUP](https://jsoup.org).
 
 ## Technologies used
@@ -18,4 +18,7 @@ Project developed to download all images from a [DeviantArt](deviantart.com) gal
 String username = "maxiuchiha22"; //gallery name
 int folderId = 76514340;  //folder id
 ```
-* Directory default: **C:/images**
+* Obs.:
+  * Directory default: **C:/images**
+  * If there are a lot of images it is necessary to add delay to not make too many requests in a short period of time 
+  and return **error 403 Forbidden**.
