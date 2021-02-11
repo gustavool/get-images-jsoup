@@ -48,19 +48,17 @@ public class DeviantArtSelector {
                 }
 
                 String jsonGetDeviantArt = restTemplate.getForEntity(url, String.class).getBody();
-
                 JSONObject jsonObj = new JSONObject(jsonGetDeviantArt);
                 hasMore = jsonObj.getBoolean("hasMore");
                 JSONArray jsonResults = jsonObj.getJSONArray("results");
 
-                if (!jsonGetDeviantArt.isEmpty() && jsonResults != null) {
-                    //get urls from json diviantart
-                    List<String> urlImgSelectList = new ArrayList<>();
-                    for (int i = 0; i < jsonResults.length(); i++) {
-                        urlImgSelectList.add(jsonResults.getJSONObject(i).getJSONObject("deviation").getString("url"));
-                    }
-                    log.info("Get url links from json, size: {}", urlImgSelectList.size());
-
+                //get urls from json diviantart
+                List<String> urlImgSelectList = new ArrayList<>();
+                for (int i = 0; i < jsonResults.length(); i++) {
+                    urlImgSelectList.add(jsonResults.getJSONObject(i).getJSONObject("deviation").getString("url"));
+                }
+                log.info("Get url links from json, size: {}", urlImgSelectList.size());
+                if (!urlImgSelectList.isEmpty()) {
                     //get specific url images with Jsoup
                     List<String> urlImgs = new ArrayList<>();
                     for (String urlImage : urlImgSelectList) {
@@ -92,12 +90,11 @@ public class DeviantArtSelector {
                     urlImgSelectList.clear();
                     urlImgs.clear();
                 } else {
-                    log.warn("Link not found.");
+                    log.warn("Image links not found.");
                 }
             }
         } catch (HttpStatusException e) {
             e.printStackTrace();
         }
     }
-
 }
